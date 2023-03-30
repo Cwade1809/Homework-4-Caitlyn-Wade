@@ -1,11 +1,49 @@
 ---
 title: "HW4 Caitlyn Wade"
+author: Caitlyn Wade
+format: 
+  html:
+    embed-resources: true
 ---
 
-## Quarto
+## Homework 4- Caitlyn Wade
 
-Quarto enables you to weave together content and executable code into a finished document. To learn more about Quarto see <https://quarto.org>.
+I decided to look into the Spaceships subreddit
 
 ```{r}
+#Loading packages needed
+library(tidyverse)
+install.packages("RedditExtractoR")
+library(RedditExtractoR)
+install.packages("tm")
+install.packages("wordcloud")
+library(tm)
 
+
+#Attempting to find an interesting subreddit to use
+find_subreddits("nasa")
+#subreddit chosen: "Spaceships"
+
+top_spaceship_urls <- find_thread_urls(subreddit = "Spaceships", sort_by = "top")
+write_rds(top_spaceship_urls, "top_spaceship_urls.rds")
+
+spaceship_no_stop <- tm_map(spaceship, removeWords, stopwords("english"))
+
+spaceship_wordcount <- spaceship_no_stop |>
+  count(word, sort = TRUE)
+
+user <- "Spaceship"
+spaceship_user <- get_user_content(user)
+str(spaceship_user[[user]]$about)
+
+#the following 2 lines of code wouldn't run when I tried to render, it got stuck in the loading stage every time, because of this, I can write the code for the rest of this section of the assignment, but it may not be able to run
+mycomments <- spaceship_user[[user]]$comments
+mycomments <- tibble(mycomments)
+
+pluckcomments <- pluck(spaceship_user, "Spaceship")
+
+mycomments_no_stop <- tm_map(mycomments, removeWords, stopwords("english"))
+
+mycomments_wordcount <- mycomments_no_stop |>
+  count(word, sort = TRUE)
 ```
